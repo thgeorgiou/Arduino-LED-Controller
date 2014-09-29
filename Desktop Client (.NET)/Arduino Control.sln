@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Arduino Control", "Arduino Control\Arduino Control.csproj", "{94FFF47A-2810-4E6D-B2B0-DFD0CA57DBD4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cyotek.Windows.Forms.ColorPicker", "..\Cyotek.Windows.Forms.ColorPicker\Cyotek.Windows.Forms.ColorPicker\Cyotek.Windows.Forms.ColorPicker.csproj", "{FB2A5786-CD2E-42CE-BC5D-0FCE90034221}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{94FFF47A-2810-4E6D-B2B0-DFD0CA57DBD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94FFF47A-2810-4E6D-B2B0-DFD0CA57DBD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94FFF47A-2810-4E6D-B2B0-DFD0CA57DBD4}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{94FFF47A-2810-4E6D-B2B0-DFD0CA57DBD4}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{94FFF47A-2810-4E6D-B2B0-DFD0CA57DBD4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{94FFF47A-2810-4E6D-B2B0-DFD0CA57DBD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94FFF47A-2810-4E6D-B2B0-DFD0CA57DBD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94FFF47A-2810-4E6D-B2B0-DFD0CA57DBD4}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{94FFF47A-2810-4E6D-B2B0-DFD0CA57DBD4}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{94FFF47A-2810-4E6D-B2B0-DFD0CA57DBD4}.Release|x86.ActiveCfg = Release|Any CPU
+		{FB2A5786-CD2E-42CE-BC5D-0FCE90034221}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB2A5786-CD2E-42CE-BC5D-0FCE90034221}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB2A5786-CD2E-42CE-BC5D-0FCE90034221}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{FB2A5786-CD2E-42CE-BC5D-0FCE90034221}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{FB2A5786-CD2E-42CE-BC5D-0FCE90034221}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FB2A5786-CD2E-42CE-BC5D-0FCE90034221}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB2A5786-CD2E-42CE-BC5D-0FCE90034221}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB2A5786-CD2E-42CE-BC5D-0FCE90034221}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{FB2A5786-CD2E-42CE-BC5D-0FCE90034221}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{FB2A5786-CD2E-42CE-BC5D-0FCE90034221}.Release|x86.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
