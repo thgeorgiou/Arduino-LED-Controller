@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#03a9f4</color>
+    <color name="secondary">#0288d1</color>
+    <color name="accent">#ffab40</color>
+
+    <color name="activity_background">#cfd8dc</color>
+
+    <color name="red">#e51c23</color>
+    <color name="green">#259b24</color>
+    <color name="blue">#5677fc</color>
+
+    <color name="actionbar">#50000000</color>
+</resources>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="android:Theme.Material">
+        <!--   your app's branding color (for the app bar) -->
+        <item name="android:colorPrimary">@color/primary</item>
+        <!--   darker variant of colorPrimary (for status bar, contextual app bars) -->
+        <item name="android:colorPrimaryDark">@color/secondary</item>
+        <!--   theme UI controls like checkboxes and text fields -->
+        <item name="android:colorAccent">@color/accent</item>
+
+        <item name="android:actionBarStyle">@style/Widget.ActionBar</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+
+    </style>
+
+    <style name="Widget.ActionBar" parent="android:Widget.Material.ActionBar.Solid">
+        <item name="android:background">@color/actionbar</item>
+    </style>
+
+    <style name="Widget.ActionBar.Transparent">
+        <item name="android:background">@color/actionbar</item>
+    </style>
+
+    <style name="AppTheme.Red" parent="android:Theme.Material.Light">
+        <item name="android:colorAccent">@color/red</item>
+    </style>
+
+    <style name="AppTheme.Green" parent="android:Theme.Material.Light">
+        <item name="android:colorAccent">@color/green</item>
+    </style>
+
+    <style name="AppTheme.Blue" parent="android:Theme.Material.Light">
+        <item name="android:colorAccent">@color/blue</item>
+    </style>
+
+    <style name="AppTheme.Orange" parent="android:Theme.Material.Light">
+        <item name="android:colorAccent">@color/accent</item>
+    </style>
+</resources>

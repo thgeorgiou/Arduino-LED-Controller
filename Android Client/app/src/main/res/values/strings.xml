@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Arduino Control</string>
+    <string name="title_leds">LEDs</string>
+    <string name="title_desklamp">Desk Lamp</string>
+    <string name="title_temperature">Temperature</string>
+    <string name="title_ravemode">Rave Mode</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="action_set_server">Set server</string>
+    <string name="action_power">Turn everything off</string>
+    <string name="action_lamp">Desk lamp</string>
+    <string name="red">Red: </string>
+    <string name="green">Green:</string>
+    <string name="blue">Blue:</string>
+    <string name="title_activity_home">Home Control</string>
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>
