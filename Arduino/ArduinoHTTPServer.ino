@@ -12,8 +12,8 @@ byte red, newRed = 0;
 byte green, newGreen = 0;
 byte blue, newBlue = 0;
 
-// Desklamp
-byte deskLamp = 0;
+// Relay
+byte relay = 0;
 
 // Loop slow
 byte loopID = 0;
@@ -25,7 +25,7 @@ static word statusPage() {
 		"HTTP/1.0 200 OK\r\n"
 		"\r\n"
 		"{\"r\":\"$D\",\"g\":\"$D\",\"b\":\"$D\",\"d\":\"$D\"}"),
-		newRed, newGreen, newBlue, deskLamp);
+		newRed, newGreen, newBlue, relay);
 	return bfill.position();
 }
 
@@ -41,7 +41,7 @@ void setup() {
 
 	// Prepare external devics
 	setColors();
-	setLamp();
+	setRelay();
 
 	if (ether.begin(sizeof Ethernet::buffer, mymac, 10) == 0) {
 		red = 125;
@@ -94,8 +94,8 @@ void setColors() {
 	
 }
 
-void setLamp() {
-	if (deskLamp != 0) digitalWrite(2, HIGH);
+void setRelay() {
+	if (relay != 0) digitalWrite(2, HIGH);
 	else digitalWrite(2, LOW);
 }
 
@@ -107,41 +107,29 @@ void loop(){
 	if (pos) {
 		char* data = (char *)Ethernet::buffer + pos;
 		if (strncmp("GET /", data, 5) == 0){
-			String str;
-
 			char *token = strtok(data, "H"); // Get everything up to the /
 			char * pch;
+            
+            // Get everything after the /
+            pch = strtok(token, "/");
+            pch = strtok(NULL, "/");
 
-			pch = strtok(token, "?");
-			while (pch != NULL) {
-				if (strncmp(pch, "r=", 2) == 0) {
-					newRed = atoi(pch + 2);
+            if (strlen(pch) > 1) {
+                // Convert our input to a long
+                unsigned long n = atol(pch);
 
-					// Sanitize input
-					if (newRed > 255) newRed = 255;
-					else if (newRed < 0) newRed = 0;
-
-				} else if (strncmp(pch, "g=", 2) == 0) {
-					newGreen = atoi(pch + 2);
-
-					// Sanitize input
-					if (newGreen > 255) newGreen = 255;
-					else if (newGreen < 0) newGreen = 0;
-
-				} else if (strncmp(pch, "b=", 2) == 0) {
-					newBlue = atoi(pch + 2);
-
-					// Sanitize input
-					if (newBlue > 255) newBlue = 255;
-					else if (newBlue < 0) newBlue = 0;
-
-				} else if (strncmp(pch, "d=", 2) == 0) {
-					deskLamp = atoi(pch + 2);
-
-					setLamp();
-				}
-				pch = strtok(NULL, "?");
-			}
+                // Extract colour data from the long
+                // Each long is 4 bytes, one for each color and one
+                // for the relay.
+                newRed = (byte) (n >> 24) & 0xFF;
+                newGreen = (byte) (n >> 16) & 0xFF;
+                newBlue = (byte) (n >> 8) & 0xFF;
+                relay = (byte) n & 0xFF;
+                
+                // Set the new relay state
+                setRelay();
+            }
+            
 			ether.httpServerReply(statusPage());
 		}
 	}
