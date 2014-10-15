@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace Arduino_Control {
     public partial class MainForm : MetroForm {
-        String server = "http://192.168.1.112/";
+        private const String Server = "http://192.168.1.112/";
 
         public MainForm() {
             InitializeComponent();
@@ -21,16 +21,33 @@ namespace Arduino_Control {
             this.Close();
         }
 
-        private void sendColor(String color, int value) {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(server + "exec?" + color + "=" + value);
+        /// <summary>
+        /// Sends current data to the Arduino
+        /// </summary>
+        /// <param name="red">Red color value (0-255)</param>
+        /// <param name="green">Green color value (0-255)</param>
+        /// <param name="blue">Blue color value (0-255)</param>
+        /// <param name="relay">Relay status, 0 for off, 1 for on</param>
+        private void SendData(byte red, byte green, byte blue, byte relay) {
+            // Store our data in an integer
+            uint rgbr = red;
+            rgbr = (rgbr << 8) + green;
+            rgbr = (rgbr << 8) + blue;
+            rgbr = (rgbr << 8) + relay;
+
+            // Send our data
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Server + rgbr);
             request.Method = "GET";
 
             using (WebResponse response = request.GetResponse()) {
             }
         }
 
+        /// <summary>
+        /// Grabs remote data from the Arduino
+        /// </summary>
         private void RefreshData() {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(server);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Server);
             request.Method = "GET";
 
             JSONResponse response;
@@ -57,21 +74,11 @@ namespace Arduino_Control {
             RefreshData();
         }
 
-        private void lampToggle_CheckedChanged(object sender, EventArgs e) {
-            HttpWebRequest request;
-
-            if (lampToggle.Checked) request = (HttpWebRequest)WebRequest.Create(server + "?d=1");
-            else request = (HttpWebRequest)WebRequest.Create(server + "?d=0");
-
-            request.Method = "GET";
-            using (WebResponse response = request.GetResponse()) {
-            }
-        }
-
         private void buttonApply_Click(object sender, EventArgs e) {
-            sendColor("r", redTrackBar.Value);
-            sendColor("g", greenTrackBar.Value);
-            sendColor("b", blueTrackBar.Value);
+            SendData((byte) redTrackBar.Value,
+                (byte) greenTrackBar.Value,
+                (byte) blueTrackBar.Value, 
+                lampToggle.Checked ? (byte) 1 : (byte) 0);
         }
 
         private void redTrackBar_Scroll(object sender, ScrollEventArgs e) {

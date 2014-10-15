@@ -300,7 +300,7 @@
             this.lampToggle.Theme = MetroFramework.MetroThemeStyle.Light;
             this.lampToggle.UseStyleColors = false;
             this.lampToggle.UseVisualStyleBackColor = true;
-            this.lampToggle.CheckedChanged += new System.EventHandler(this.lampToggle_CheckedChanged);
+            this.lampToggle.CheckedChanged += new System.EventHandler(this.buttonApply_Click);
             // 
             // metroLabel5
             // 
