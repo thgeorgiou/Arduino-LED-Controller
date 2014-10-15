@@ -28,6 +28,7 @@ import com.sakisds.arduinocontrol.EmptyCallback;
 import com.sakisds.arduinocontrol.R;
 import com.sakisds.arduinocontrol.api.ArduinoService;
 import com.sakisds.arduinocontrol.api.JSONResponse;
+import com.sakisds.arduinocontrol.api.Utils;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -123,11 +124,8 @@ public class MainActivity extends Activity implements View.OnClickListener, Call
             mService.read(this);
             return true;
         } else if (id == R.id.action_power) {
-            mService.setRed(0, mEmptyCallback);
-            mService.setGreen(0, mEmptyCallback);
-            mService.setBlue(0, mEmptyCallback);
-
-            mService.setDeskLamp(0, mEmptyCallback);
+            mService.send(Utils.StoreInInteger(0, 0, 0, 0),
+                    mEmptyCallback);
 
             JSONResponse jsonResponse = new JSONResponse("0", "0", "0", "0", "0");
             success(jsonResponse, null);
@@ -135,7 +133,11 @@ public class MainActivity extends Activity implements View.OnClickListener, Call
             return true;
         } else if (id == R.id.action_lamp) {
             mDeskLamp = !mDeskLamp;
-            mService.setDeskLamp(mDeskLamp ? 1 : 0, mEmptyCallback);
+            int color = mColorPicker.getColor();
+
+            mService.send(
+                    Utils.StoreInInteger(Color.red(color), Color.green(color), Color.blue(color), mDeskLamp ? 1 : 0),
+                    mEmptyCallback);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -146,9 +148,9 @@ public class MainActivity extends Activity implements View.OnClickListener, Call
 
         switch (view.getId()) {
             case R.id.fab:
-                mService.setRed(Color.red(color), mEmptyCallback);
-                mService.setGreen(Color.green(color), mEmptyCallback);
-                mService.setBlue(Color.blue(color), mEmptyCallback);
+                mService.send(
+                        Utils.StoreInInteger(Color.red(color), Color.green(color), Color.blue(color), mDeskLamp ? 1 : 0),
+                        mEmptyCallback);
                 break;
 
             case R.id.button_more_open:
