@@ -93,8 +93,8 @@
     <None Include="Resources\web_hi_res_512.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Cyotek.Windows.Forms.ColorPicker\Cyotek.Windows.Forms.ColorPicker\Cyotek.Windows.Forms.ColorPicker.csproj">
-      <Project>{FB2A5786-CD2E-42CE-BC5D-0FCE90034221}</Project>
+    <ProjectReference Include="..\Cyotek.Windows.Forms.ColorPicker\Cyotek.Windows.Forms.ColorPicker\Cyotek.Windows.Forms.ColorPicker.csproj">
+      <Project>{fb2a5786-cd2e-42ce-bc5d-0fce90034221}</Project>
       <Name>Cyotek.Windows.Forms.ColorPicker</Name>
     </ProjectReference>
   </ItemGroup>
