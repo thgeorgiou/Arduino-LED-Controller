@@ -37,7 +37,13 @@ void setup() {
 	pinMode(5, OUTPUT);
 	pinMode(6, OUTPUT);
 	pinMode(A0, INPUT);
-	TCCR2B = TCCR2B & 0b11111000 | 0x02;
+	
+    // PWM Frequency
+    // Not sure if this is a good idea, it kinda messed up the ethernet
+    TCCR2A = _BV(COM2A0) | _BV(COM2B1) | _BV(WGM21) | _BV(WGM20);
+    TCCR2B = _BV(WGM22) | _BV(CS22);
+    OCR2A = 180;
+    OCR2B = 50;
 
 	// Prepare external devics
 	setColors();
