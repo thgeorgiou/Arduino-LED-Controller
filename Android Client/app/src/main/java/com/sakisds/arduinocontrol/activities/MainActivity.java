@@ -1,20 +1,19 @@
 package com.sakisds.arduinocontrol.activities;
 
 import android.animation.Animator;
-import android.animation.ObjectAnimator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.app.SearchManager;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Outline;
 import android.os.Bundle;
-import android.renderscript.Sampler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.ScaleAnimation;
-import android.view.animation.Transformation;
+import android.view.ViewAnimationUtils;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -90,7 +89,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Call
         int size = getResources().getDimensionPixelSize(R.dimen.fab_size);
         Outline outline = new Outline();
         outline.setOval(0, 0, size, size);
-        mFAB.setOutline(outline);
+        //mFAB.setOutline(outline);
 
         // Color picker
         mColorPicker.addSaturationBar(mSaturationBar);
@@ -104,6 +103,12 @@ public class MainActivity extends Activity implements View.OnClickListener, Call
                 .build();
         mService = restAdapter.create(ArduinoService.class);
         mService.read(this);
+
+        // Search query
+        Intent intent = getIntent();
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            executeQuery(intent.getStringExtra(SearchManager.QUERY));
+        }
     }
 
 
@@ -158,10 +163,44 @@ public class MainActivity extends Activity implements View.OnClickListener, Call
                 mGreenSeekBar.setProgress(Color.green(color));
                 mBlueSeekBar.setProgress(Color.blue(color));
 
+                // get the center for the clipping circle
+                int cx = mRGBLayout.getRight();
+                int cy = mRGBLayout.getTop();
+
+                // get the final radius for the clipping circle
+                int finalRadius = mRGBLayout.getWidth();
+
+                // create and start the animator for this view
+                // (the start radius is zero)
+                Animator anim =
+                        ViewAnimationUtils.createCircularReveal(mRGBLayout, cx, cy, 0, finalRadius);
+                anim.start();
+
                 mRGBLayout.setVisibility(View.VISIBLE);
                 break;
             case R.id.button_more_close:
-                mRGBLayout.setVisibility(View.GONE);
+                // get the center for the clipping circle
+                int cxc = mRGBLayout.getRight();
+                int cyc = mRGBLayout.getTop();
+
+                // get the initial radius for the clipping circle
+                int initialRadius = mRGBLayout.getWidth();
+
+                // create the animation (the final radius is zero)
+                Animator animClose =
+                        ViewAnimationUtils.createCircularReveal(mRGBLayout, cxc, cyc, initialRadius, 0);
+
+                // make the view invisible when the animation is done
+                animClose.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        super.onAnimationEnd(animation);
+                        mRGBLayout.setVisibility(View.INVISIBLE);
+                    }
+                });
+
+                // start the animation
+                animClose.start();
                 break;
         }
     }
@@ -204,7 +243,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Call
 
         if (mRGBLayout.getVisibility() == View.VISIBLE) {
             mRedSeekBar.setProgress(Color.red(color));
-            mGreenSeekBar .setProgress(Color.green(color));
+            mGreenSeekBar.setProgress(Color.green(color));
             mBlueSeekBar.setProgress(Color.blue(color));
         }
     }
@@ -216,24 +255,38 @@ public class MainActivity extends Activity implements View.OnClickListener, Call
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int value, boolean fromUser) {
-            switch (seekBar.getId()) {
-                case R.id.seekBar_red:
-                    mRedTextView.setText(String.valueOf(value));
-                    break;
-                case R.id.seekBar_green:
-                    mGreenTextView.setText(String.valueOf(value));
-                    break;
-                case R.id.seekBar_blue:
-                    mBlueTextView.setText(String.valueOf(value));
-                    break;
-            }
+        switch (seekBar.getId()) {
+            case R.id.seekBar_red:
+                mRedTextView.setText(String.valueOf(value));
+                break;
+            case R.id.seekBar_green:
+                mGreenTextView.setText(String.valueOf(value));
+                break;
+            case R.id.seekBar_blue:
+                mBlueTextView.setText(String.valueOf(value));
+                break;
+        }
         if (fromUser) mColorPicker.setColor(Color.rgb(mRedSeekBar.getProgress(),
                 mGreenSeekBar.getProgress(), mBlueSeekBar.getProgress()));
     }
 
     @Override
-    public void onStartTrackingTouch(SeekBar seekBar) { }
+    public void onStartTrackingTouch(SeekBar seekBar) {
+    }
 
     @Override
-    public void onStopTrackingTouch(SeekBar seekBar) { }
+    public void onStopTrackingTouch(SeekBar seekBar) {
+    }
+
+    private void executeQuery(String query) {
+        if (query.contains("lamp") & query.contains("on")) {
+            mDeskLamp = true;
+        }
+
+        // Sync changes
+        int color = mColorPicker.getColor();
+        mService.send(
+                Utils.StoreInInteger(Color.red(color), Color.green(color), Color.blue(color), mDeskLamp ? 1 : 0),
+                mEmptyCallback);
+    }
 }
