@@ -130,8 +130,48 @@ public:
     friend void dumpStash (const char* msg, void* ptr);   // optional
 };
 
-/** This class populates network send / recieve buffers.
-*   Provides print type access to buffer
+/** This class populates network send and receive buffers.
+*
+*   This class provides formatted printing into memory. Users can use it to write into send buffers.
+*  
+*   Nota: PGM_P: is a pointer to a string in program space (defined in the source code)
+*
+*   # Format string
+*
+*   | Format | Parameter   | Output
+*   |--------|-------------|----------
+*   | $D     | uint16_t    | Decimal representation
+*   | $T ¤   | double      | Decimal representation with 3 digits after decimal sign ([-]d.ddd)
+*   | $H     | uint16_t    | Hexadecimal value of lsb (from 00 to ff)
+*   | $L     | long        | Decimal representation
+*   | $S     | const char* | Copy null terminated string from main memory
+*   | $F     | PGM_P       | Copy null terminated string from program space
+*   | $E     | byte*       | Copy null terminated string from EEPROM space
+*   | $$     | _none_      | '$'
+*
+*   ¤ _Available only if FLOATEMIT is defined_
+*
+*   # Examples
+*   ~~~~~~~~~~~~~{.c}
+*     uint16_t ddd = 123;
+*     double ttt = 1.23;
+*     uint16_t hhh = 0xa4;
+*     long lll = 123456789;
+*     char * sss;
+*     char fff[] PROGMEM = "MyMemory";
+*
+*     sss[0] = 'G';
+*     sss[1] = 'P';
+*     sss[2] = 'L';
+*     sss[3] = 0;
+*     buf.emit_p( PSTR("ddd=$D\n"), ddd );	// "ddd=123\n"
+*     buf.emit_p( PSTR("ttt=$T\n"), ttt );	// "ttt=1.23\n" **TO CHECK**
+*     buf.emit_p( PSTR("hhh=$H\n"), hhh );	// "hhh=a4\n"
+*     buf.emit_p( PSTR("lll=$L\n"), lll );	// "lll=123456789\n"
+*     buf.emit_p( PSTR("sss=$S\n"), sss );	// "sss=GPL\n"
+*     buf.emit_p( PSTR("fff=$F\n"), fff );	// "fff=MyMemory\n"
+*   ~~~~~~~~~~~~~
+*
 */
 class BufferFiller : public Print {
     uint8_t *start; //!< Pointer to start of buffer
@@ -147,12 +187,12 @@ public:
     BufferFiller (uint8_t* buf) : start (buf), ptr (buf) {}
 
     /** @brief  Add formatted text to buffer
-    *   @param  fmt Format string
+    *   @param  fmt Format string (see Class description)
     *   @param  ... parameters for format string
     */
     void emit_p (PGM_P fmt, ...);
 
-    /** @brief  Add data to buffer from character buffer
+    /** @brief  Add data to buffer from main memory
     *   @param  s Pointer to data
     *   @param  n Number of characters to copy
     */
@@ -196,7 +236,7 @@ public:
     static uint16_t hisport;  ///< TCP port to connect to (default 80)
     static bool using_dhcp;   ///< True if using DHCP
     static bool persist_tcp_connection; ///< False to break connections on first packet received
-    static int16_t delaycnt; ///< Counts number of cycles of packetLoop when no packet recieved - used to trigger periodic gateway ARP request
+    static int16_t delaycnt; ///< Counts number of cycles of packetLoop when no packet received - used to trigger periodic gateway ARP request
 
     // EtherCard.cpp
     /**   @brief  Initialise the network interface
@@ -221,17 +261,17 @@ public:
                              const uint8_t* mask = 0);
 
     // tcpip.cpp
-    /**   @brief  Sends a UDP packet to the IP address of last processed recieved packet
+    /**   @brief  Sends a UDP packet to the IP address of last processed received packet
     *     @param  data Pointer to data payload
     *     @param  len Size of data payload (max 220)
     *     @param  port Source IP port
     */
     static void makeUdpReply (const char *data, uint8_t len, uint16_t port);
 
-    /**   @brief  Parse recieved data
-    *     @param  plen Size of data to parse (e.g. return value of packetRecieve()).
+    /**   @brief  Parse received data
+    *     @param  plen Size of data to parse (e.g. return value of packetReceive()).
     *     @return <i>uint16_t</i> Offset of TCP payload data in data buffer or zero if packet processed
-    *     @note   Data buffer is shared by recieve and transmit functions
+    *     @note   Data buffer is shared by receive and transmit functions
     *     @note   Only handles ARP and IP
     */
     static uint16_t packetLoop (uint16_t plen);
@@ -243,7 +283,7 @@ public:
     */
     static uint16_t accept (uint16_t port, uint16_t plen);
 
-    /**   @brief  Send a respons to a HTTP request
+    /**   @brief  Send a response to a HTTP request
     *     @param  dlen Size of the HTTP (TCP) payload
     */
     static void httpServerReply (uint16_t dlen);
@@ -419,7 +459,7 @@ public:
 
     // dhcp.cpp
     /**   @brief  Update DHCP state
-    *     @param  len Length of recieved data packet
+    *     @param  len Length of received data packet
     */
     static void DhcpStateMachine(uint16_t len);
 
@@ -442,11 +482,11 @@ public:
     *     @return <i>bool</i> True if DHCP successful
     *     @note   Blocks until DHCP complete or timeout after 60 seconds
     */
-    static bool dhcpSetup ();
+    static bool dhcpSetup (const char *hname = NULL, bool fromRam =false);
 
     /**   @brief  Register a callback for a specific DHCP option number
-    *     @param  <i>option</i> The option number to request from the DHCP server
-    *     @param  <i>callback</i> The function to be call when the option is received
+    *     @param  option The option number to request from the DHCP server
+    *     @param  callback The function to be call when the option is received
     */
     static void dhcpAddOptionCallback(uint8_t option, DhcpOptionCallback callback);
 
